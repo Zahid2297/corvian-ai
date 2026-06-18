@@ -15,6 +15,13 @@
       "when": 1781740313073,
       "tag": "0001_complex_mariko_yashida",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781765205769,
+      "tag": "0002_flawless_ultragirl",
+      "breakpoints": true
     }
   ]
 }
