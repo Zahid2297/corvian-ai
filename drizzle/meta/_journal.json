@@ -22,6 +22,20 @@
       "when": 1781765205769,
       "tag": "0002_flawless_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781800138327,
+      "tag": "0003_cynical_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781802827373,
+      "tag": "0004_naive_electro",
+      "breakpoints": true
     }
   ]
 }

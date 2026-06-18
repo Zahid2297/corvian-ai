@@ -143,7 +143,7 @@ export const conversations = pgTable("conversations", {
     .notNull(),
 });
 
-export const messages = pgTable("messages", {
+export const conversationMessages = pgTable("conversation_messages", {
   id: uuid("id").defaultRandom().primaryKey(),
 
   conversationId: uuid("conversation_id").notNull(),
@@ -315,3 +315,149 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+// Gmail Connections
+
+export const gmailConnections = pgTable("gmail_connections", {
+  id: text("id").primaryKey(),
+
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  googleEmail: text("google_email").notNull(),
+
+  accessToken: text("access_token").notNull(),
+
+  refreshToken: text("refresh_token"),
+
+  expiresAt: timestamp("expires_at"),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const gmailConnectionRelations = relations(
+  gmailConnections,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [gmailConnections.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+// Calendar Connections
+
+export const calendarConnections = pgTable("calendar_connections", {
+  id: text("id").primaryKey(),
+
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  calendarId: text("calendar_id").notNull(),
+
+  accessToken: text("access_token").notNull(),
+
+  refreshToken: text("refresh_token"),
+
+  expiresAt: timestamp("expires_at"),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const calendarConnectionRelations = relations(
+  calendarConnections,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [calendarConnections.userId],
+      references: [user.id],
+    }),
+  }),
+);
+
+export const emails = pgTable(
+  "emails",
+  {
+    id: text("id").primaryKey(),
+
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    gmailMessageId: text("gmail_message_id").notNull(),
+
+    sender: text("sender").notNull(),
+
+    subject: text("subject").notNull(),
+
+    snippet: text("snippet"),
+
+    priority: text("priority").default("normal"),
+
+    isRead: boolean("is_read").default(false),
+
+    receivedAt: timestamp("received_at"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("emails_userId_idx").on(table.userId)],
+);
+
+export const events = pgTable(
+  "events",
+  {
+    id: text("id").primaryKey(),
+
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    calendarEventId: text("calendar_event_id").notNull(),
+
+    title: text("title").notNull(),
+
+    description: text("description"),
+
+    startTime: timestamp("start_time"),
+
+    endTime: timestamp("end_time"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("events_userId_idx").on(table.userId)],
+);
+
+//AI Chats
+
+export const chats = pgTable("chats", {
+  id: text("id").primaryKey(),
+
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "cascade",
+    }),
+
+  title: text("title"),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+//AI Messages
+
+export const chatMessages = pgTable("chat_messages", {
+  id: text("id").primaryKey(),
+
+  chatId: text("chat_id")
+    .notNull()
+    .references(() => chats.id, {
+      onDelete: "cascade",
+    }),
+
+  role: text("role").notNull(),
+
+  content: text("content").notNull(),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
